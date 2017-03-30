@@ -29,7 +29,7 @@ let yandex = async (password, login, shopId) => {
 
         await nightmare.end();
 
-        return { cost ,orders };
+        return { cost , orders };
     } catch (err) {
         console.error(err);
     }
