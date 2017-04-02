@@ -1,3 +1,5 @@
+'use strict';
+
 const Nightmare = require('nightmare');
 const nightmare = new Nightmare({ show: true });
 const moment = require('moment');
@@ -46,7 +48,7 @@ let avtoPro = async (login, password) => {
             })
         }
     } catch (err) {
-        console.error(err)
+        console.log(err)
     }
 };
 
@@ -68,7 +70,7 @@ function __getYesterdayOrders(data) {
     data.forEach( order => {
         let date = order.date.replace(/,*/, "");
 
-        if( yesterday.diff(moment(date, 'DD.MM.YYYY'), 'days') === 0) {
+        if(yesterday.diff(moment(date, 'DD.MM.YYYY'), 'days') === 0) {
             result.push(order);
         }
     });

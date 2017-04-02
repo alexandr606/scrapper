@@ -1,3 +1,6 @@
+'use strict';
+
+
 const Nightmare = require('nightmare');
 const moment    = require('moment');
 const nightmare = new Nightmare({ show: true });
