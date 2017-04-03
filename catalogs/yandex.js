@@ -1,5 +1,3 @@
-'use strict';
-
 const Nightmare = require('nightmare');
 const nightmare = new Nightmare({ show: true });
 

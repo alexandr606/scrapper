@@ -4,6 +4,16 @@ const Nightmare = require('nightmare');
 const nightmare = new Nightmare({ show: true });
 const moment = require('moment');
 
+/*
+ returning values
+ {
+     balance: Float,
+     expence: Float
+     ordersCount: Integer,
+     ordersSum: Float
+ }
+*/
+
 let avtoPro = async (login, password) => {
     try {
         let balance = await nightmare
@@ -16,7 +26,8 @@ let avtoPro = async (login, password) => {
             .click('button[type="submit"]')
             .wait(1000)
             .evaluate(()=> {
-                return document.querySelector('dl.bill').innerText.split(':')[1];
+                let selector =  document.querySelector('dl.bill');
+                return selector.innerText.split(':')[1]
             });
 
         let expence = await nightmare
@@ -40,12 +51,14 @@ let avtoPro = async (login, password) => {
         let formedOrders = __getYesterdayOrders( __formOrders(unformedOrders) );
 
         return {
-            balance: balance,
-            expence: exp,
-            ordersCount: formedOrders.length,
-            ordersSum: formedOrders.length && formedOrders.reduce( sum, order => {
-                return sum + parseFloat(order.cost);
-            })
+            balance     : parseFloat(balance),
+            expence     : parseFloat(exp.replace('-','')),
+            ordersCount : formedOrders.length,
+            ordersSum   : formedOrders.length && formedOrders
+                .map(item => item.cost)
+                .reduce( (sum, order) => {
+                    return sum + parseFloat(order.cost);
+                })
         }
     } catch (err) {
         console.log(err)
@@ -65,6 +78,7 @@ function __formOrders (data) {
 
 function __getYesterdayOrders(data) {
     let yesterday = moment().clone().subtract(1, 'days').startOf('day');
+
     let result = [];
 
     data.forEach( order => {

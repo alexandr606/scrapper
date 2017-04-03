@@ -4,6 +4,15 @@ const Nightmare = require('nightmare');
 const nightmare = new Nightmare({ show: true });
 const moment    = require('moment');
 
+/*
+ returning values
+ {
+ balance: Float,
+ ordersCount: Integer,
+ ordersSum: Integer
+ }
+*/
+
 let zzap = async (login, password) => {
 
     try {
@@ -14,7 +23,7 @@ let zzap = async (login, password) => {
             .wait('#ctl00_BodyPlace_LogonFormCallbackPanel_LogonFormLayout_PasswordTextBox_I')
             .type('#ctl00_BodyPlace_LogonFormCallbackPanel_LogonFormLayout_PasswordTextBox_I', password)
             .click('.dx-vam')
-            .wait('#MessagePopupButton_I')
+            .wait(2000)
             .click('#MessagePopupButton_I')
             .wait(5000)
             .evaluate(() => {
@@ -46,8 +55,11 @@ let zzap = async (login, password) => {
         });
 
         return {
-            balance: parseFloat(balance.split(' ')[0]),
-            orders: resultOrders
+            balance     : parseFloat(balance.split(' ')[0]),
+            ordersCount : resultOrders.length,
+            ordersSum   : resultOrders.map( item => item.cost ).reduce( (sum, item) => {
+                return sum + item;
+            })
         };
 
     } catch (err) {

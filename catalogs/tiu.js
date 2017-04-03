@@ -61,7 +61,10 @@ function __formElementOut(data) {
     let cost    = parseInt($data[5].split(' ')[0]);
     let date    = __convertDate($data[1]);
 
-    return { date: date, cost: cost };
+    return {
+        date: date,
+        cost: cost
+    };
 }
 
 function __convertDate(date) {
@@ -80,7 +83,6 @@ function __convertDate(date) {
     let month = dates[date.split(' ')[1]];
     return moment([config.year, month, day]).format('YYYY-MM-DD');
 }
-
 
 const dates = {
     'дек.': '11',
