@@ -46,9 +46,10 @@ let tiu = async (login, password) => {
         });
 
     return {
-        ordersCount: result.length,
-        ordersSum: result.map( order => parseFloat(order.cost))
-            .reduce((sum, cur) => sum + cur )
+        catalogId   : 'tiu',
+        ordersCount : result.length || 0,
+        ordersSum   : result && result.length && result.map( order => parseFloat(order.cost))
+            .reduce((sum, cur) => sum + cur ) || 0
     };
 
     } catch (err) {

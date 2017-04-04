@@ -26,8 +26,7 @@ let avtoPro = async (login, password) => {
             .click('button[type="submit"]')
             .wait(1000)
             .evaluate(()=> {
-                let selector =  document.querySelector('dl.bill');
-                return selector.innerText.split(':')[1]
+                return document.querySelector('dl.bill').innerText.split(':')[1]
             });
 
         let expence = await nightmare
@@ -47,12 +46,13 @@ let avtoPro = async (login, password) => {
 
         await nightmare.end();
 
-        let exp = expence[1].split('\t')[1];
+        let exp = expence && expence[1].split('\t')[1];
         let formedOrders = __getYesterdayOrders( __formOrders(unformedOrders) );
 
         return {
-            balance     : parseFloat(balance),
-            expense     : parseFloat(exp.replace('-','')),
+            catalogId   : 'avtopro',
+            balance     : balance && parseFloat(balance.replace(',','.')) || null,
+            expense     : exp && parseFloat(exp.replace('-','')) || null,
             ordersCount : formedOrders.length,
             ordersSum   : formedOrders.length && formedOrders
                 .map(item => item.cost)
@@ -67,6 +67,11 @@ let avtoPro = async (login, password) => {
 
 
 function __formOrders (data) {
+
+    if(!data || !data.length) {
+        return {};
+    };
+
     return data.map( order => {
         let temp = order.split('\n');
         let date = temp[1];
@@ -77,6 +82,11 @@ function __formOrders (data) {
 }
 
 function __getYesterdayOrders(data) {
+
+    if(!data || !data.length) {
+        return [];
+    };
+
     let yesterday = moment().clone().subtract(1, 'days').startOf('day');
 
     let result = [];

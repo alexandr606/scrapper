@@ -43,13 +43,14 @@ let avito = async (login, password) => {
 
             if( yesterday.diff(moment(formed.date, 'YYYY-MM-DD'), 'days') === 0 ) {
                 formedExpence = formed;
-            };
+            }
         });
 
         return {
-            balance : parseFloat(balance.replace(' ', '')),
-            expense : formedExpence.cost,
-            clicks  : parseInt(formedExpence.clicks, 10)
+            catalogId   : 'avito',
+            balance     : balance && parseFloat(balance.replace(' ', '')),
+            expense     : formedExpence.cost,
+            clicks      : parseInt(formedExpence.clicks, 10)
         };
 
     } catch (err) {

@@ -55,11 +55,14 @@ let zzap = async (login, password) => {
         });
 
         return {
-            balance     : parseFloat(balance.split(' ')[0]),
-            ordersCount : resultOrders.length,
-            ordersSum   : resultOrders.map( item => item.cost ).reduce( (sum, item) => {
-                return sum + item;
-            })
+            catalogId   : 'zzap',
+            balance     : balance && parseFloat(balance.split(' ')[0]),
+            ordersCount : resultOrders && resultOrders.length,
+            ordersSum   : resultOrders && resultOrders.length
+                            && resultOrders.map( item => item.cost )
+                                .reduce( (sum, item) => {
+                                    return sum + item;
+                                })
         };
 
     } catch (err) {

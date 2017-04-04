@@ -2,14 +2,7 @@
 
 const pool = require('../lib/db');
 
-let addData = () => {
-
-    let data = {
-        catalogId: 'yandex',
-        shopId: 'lol',
-        balance: 123,
-        expense: 123.23
-    };
+let addData = (data) => {
 
     let query = `INSERT INTO data`;
 
@@ -24,35 +17,39 @@ let addData = () => {
         throw new Error('No shop id passed');
     }
 
-    if(data.balance) {
+    if(typeof data.balance !== 'undefined') {
         fields.push('balance');
         values.push(data.balance);
     }
 
-    if(data.expense) {
+    if(typeof data.expense !== 'undefined') {
         fields.push('expense');
         values.push(data.expense);
     }
 
-    if(data.clicks) {
+    if(typeof data.clicks !== 'undefined') {
         fields.push('clicks');
         values.push(data.clicks);
     }
 
-    if(data.ordersCount) {
+    if(typeof data.ordersCount !== 'undefined') {
         fields.push('orders_count');
         values.push(data.ordersCount);
     }
 
-    if(data.ordersSum) {
+    if(typeof data.ordersSum !== 'undefined') {
         fields.push('orders_sum');
         values.push(data.ordersSum);
     }
 
-    query += ` (${fields.join(', ')}, date, catalog_id, shop_id) `;
-    query += `VALUES (${values.join(', ')}, NOW(), '${data.catalogId}', '${data.shopId}') `;
+    if(fields.length) {
+        query += ` (${fields.join(', ')}, date, catalog_id, shop_id) `;
+        query += `VALUES (${values.join(', ')}, NOW(), '${data.catalogId}', '${data.shopId}') `;
+    } else {
+        query += `(date, catalog_id, shop_id) VALUES ( NOW(), '${data.catalogId}', '${data.shopId}')`
+    }
 
-    return pool.query(query, function (err, res) {
+    return pool.query(query, null, function (err, res) {
         if(err) {
             throw new Error(err);
         }

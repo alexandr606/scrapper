@@ -54,18 +54,20 @@ let yandex = async (password, login, shopId) => {
         orders.forEach( order => {
             let yesterday = moment().clone().subtract(1, 'days').startOf('day');
             let formedOrder = __formOrderData(order);
-            yesterday = moment([2017,3,1])
+
             if(yesterday.diff(moment(formedOrder.oderDate, 'YYYY-MM-DD'), 'days') === 0) {
                 ordersResult.push(formedOrder.orderCost);
             }
         });
 
         return {
-            balance: parseFloat(cost.balance),
-            clicks: parseInt(cost.clicks, 10),
-            expense: parseFloat(cost.cost),
+            catalogId: 'yandex',
+            balance: parseFloat(cost.balance) || null,
+            clicks: parseInt(cost.clicks, 10)|| null,
+            expense: parseFloat(cost.cost)|| null,
             ordersCount: ordersResult && ordersResult.length,
-            ordersCost: ordersResult.reduce((sum, cur) => parseInt(sum, 10) + parseInt(cur, 10) )
+            ordersCost: ordersResult && ordersResult.length
+                        && ordersResult.reduce((sum, cur) => parseInt(sum, 10) + parseInt(cur, 10) )
         };
 
     } catch (err) {
