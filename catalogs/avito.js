@@ -38,7 +38,6 @@ let avito = async (login, password) => {
 
         expense.forEach( item => {
             let formed = __formExpense(item);
-
             let yesterday = moment().clone().subtract(1, 'days').startOf('day');
 
             if( yesterday.diff(moment(formed.date, 'YYYY-MM-DD'), 'days') === 0 ) {
