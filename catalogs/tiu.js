@@ -1,10 +1,17 @@
 'use strict';
 
-
 const Nightmare = require('nightmare');
 const moment    = require('moment');
 const nightmare = new Nightmare({ show: true });
 const config    = require('../config.json');
+
+/*
+ returning values
+ {
+     ordersCount: Integer,
+     ordersSum: Float
+ }
+ */
 
 let tiu = async (login, password) => {
     try {
@@ -38,7 +45,11 @@ let tiu = async (login, password) => {
             }
         });
 
-    return result;
+    return {
+        ordersCount: result.length,
+        ordersSum: result.map( order => parseFloat(order.cost))
+            .reduce((sum, cur) => sum + cur )
+    };
 
     } catch (err) {
         console.error(err)

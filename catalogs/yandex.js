@@ -1,5 +1,18 @@
+'use strict';
+
 const Nightmare = require('nightmare');
 const nightmare = new Nightmare({ show: true });
+const moment    = require('moment');
+
+/*
+ {
+     balance: Float,
+     clicks: Integer,
+     expense: Float,
+     ordersCount: Integer,
+     ordersCost: String
+ }
+ */
 
 let yandex = async (password, login, shopId) => {
     try {
@@ -8,6 +21,8 @@ let yandex = async (password, login, shopId) => {
             .type('input[name="login"]', login)
             .type('input[name="passwd"]', password)
             .click('.domik-submit-button')
+            .wait('a[href="/shop.xml?id=21322372"]')
+            .click('a[href="/shop.xml?id=21322372"]')
             .wait('.order-report-last')
             .evaluate(() => {
                 let balance = document.querySelector('.order-report-last div strong').innerText;
@@ -20,20 +35,55 @@ let yandex = async (password, login, shopId) => {
             });
 
         let orders = await nightmare
-            .goto(`https://partner.market.yandex.ru/orders-list.xml?id=${shopId}`)
+            .click(`a[href="/orders-list.xml?id=21322372"`)
             .wait('.orders__body')
             .evaluate(() => {
-                return [...document.querySelectorAll('div.order-price')]
-                    .map( el => el.innerText.split(' ')[0]);
+                return [...document.querySelectorAll('.orders__body tr')]
+                    .map( el => {
+                        return {
+                            all: el.innerText,
+                            cost: el.querySelector('div.order-price').innerText
+                        }
+                    });
             });
 
         await nightmare.end();
 
-        return { cost , orders };
+        let ordersResult = [];
+
+        orders.forEach( order => {
+            let yesterday = moment().clone().subtract(1, 'days').startOf('day');
+            let formedOrder = __formOrderData(order);
+            yesterday = moment([2017,3,1])
+            if(yesterday.diff(moment(formedOrder.oderDate, 'YYYY-MM-DD'), 'days') === 0) {
+                ordersResult.push(formedOrder.orderCost);
+            }
+        });
+
+        return {
+            balance: parseFloat(cost.balance),
+            clicks: parseInt(cost.clicks, 10),
+            expense: parseFloat(cost.cost),
+            ordersCount: ordersResult && ordersResult.length,
+            ordersCost: ordersResult.reduce((sum, cur) => parseInt(sum, 10) + parseInt(cur, 10) )
+        };
+
     } catch (err) {
         console.error(err);
     }
 };
+
+function __formOrderData(data) {
+    let $data           = data.all.split('\t');
+    let date            = moment($data[2], 'DD.MM.YYYY').format('YYYY-MM-DD');
+    let orderExpense    = data.cost.split(' ')[0];
+
+    return {
+        oderDate: date,
+        orderCost: orderExpense
+    };
+}
+
 
 module.exports = yandex;
 
