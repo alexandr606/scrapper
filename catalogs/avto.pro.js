@@ -8,7 +8,7 @@ const moment = require('moment');
  returning values
  {
      balance: Float,
-     expence: Float
+     expense: Float
      ordersCount: Integer,
      ordersSum: Float
  }
@@ -52,7 +52,7 @@ let avtoPro = async (login, password) => {
 
         return {
             balance     : parseFloat(balance),
-            expence     : parseFloat(exp.replace('-','')),
+            expense     : parseFloat(exp.replace('-','')),
             ordersCount : formedOrders.length,
             ordersSum   : formedOrders.length && formedOrders
                 .map(item => item.cost)
