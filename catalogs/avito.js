@@ -44,7 +44,7 @@ let avito = async (login, password) => {
                 formedExpence = formed;
             }
         });
-
+        console.log('avito')
         return {
             catalogId   : 'avito',
             balance     : balance && parseFloat(balance.replace(' ', '')),

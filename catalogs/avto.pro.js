@@ -49,6 +49,7 @@ let avtoPro = async (login, password) => {
         let exp = expence && expence[1].split('\t')[1];
         let formedOrders = __getYesterdayOrders( __formOrders(unformedOrders) );
 
+        console.log('avtopro')
         return {
             catalogId   : 'avtopro',
             balance     : balance && parseFloat(balance.replace(',','.')) || null,

@@ -46,6 +46,11 @@ let addData = (data) => {
         values.push(data.ordersSum);
     }
 
+    if(typeof data.ordersCharge !== 'undefined') {
+        fields.push('orders_charge');
+        values.push(data.ordersCharge);
+    }
+
     if(fields.length) {
         query += ` (${fields.join(', ')}, date, catalog_id, shop_id) `;
         query += `VALUES (${values.join(', ')}, NOW(), '${data.catalogId}', '${data.shopId}') `;

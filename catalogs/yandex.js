@@ -1,7 +1,7 @@
 'use strict';
 
 const Nightmare = require('nightmare');
-const nightmare = new Nightmare({ show: true });
+const nightmare = new Nightmare({show: true });
 const moment    = require('moment');
 
 /*
@@ -10,19 +10,19 @@ const moment    = require('moment');
      clicks: Integer,
      expense: Float,
      ordersCount: Integer,
-     ordersCost: String
+     ordersCost: String,
+     ordersCharge: String
  }
  */
 
 let yandex = async (password, login, shopId) => {
     try {
         let cost = await nightmare
-            .goto(`https://partner.market.yandex.ru/order.xml?id=${shopId}`)
+            .goto(`https://partner.market.yandex.ru/order.xml?id=21322372`)
             .type('input[name="login"]', login)
             .type('input[name="passwd"]', password)
             .click('.domik-submit-button')
-            .wait('a[href="/shop.xml?id=21322372"]')
-            .click('a[href="/shop.xml?id=21322372"]')
+            //.click('.passport-Button')
             .wait('.order-report-last')
             .evaluate(() => {
                 let balance = document.querySelector('.order-report-last div strong').innerText;
@@ -35,39 +35,40 @@ let yandex = async (password, login, shopId) => {
             });
 
         let orders = await nightmare
-            .click(`a[href="/orders-list.xml?id=21322372"`)
-            .wait('.orders__body')
+            .click(`a[href="/stat-orders.xml?id=21322372"]`)
+            .wait('table.dt')
             .evaluate(() => {
-                return [...document.querySelectorAll('.orders__body tr')]
-                    .map( el => {
-                        return {
-                            all: el.innerText,
-                            cost: el.querySelector('div.order-price').innerText
-                        }
-                    });
+                return [...document.querySelectorAll('table.dt tbody tr')]
+                    .map( el => el.innerText );
             });
 
         await nightmare.end();
 
         let ordersResult = [];
 
+        orders.splice(0, 8);
+
         orders.forEach( order => {
             let yesterday = moment().clone().subtract(1, 'days').startOf('day');
             let formedOrder = __formOrderData(order);
 
             if(yesterday.diff(moment(formedOrder.oderDate, 'YYYY-MM-DD'), 'days') === 0) {
-                ordersResult.push(formedOrder.orderCost);
+                ordersResult.push(formedOrder);
             }
         });
-
+        console.log('yandex')
         return {
             catalogId: 'yandex',
             balance: parseFloat(cost.balance) || null,
             clicks: parseInt(cost.clicks, 10)|| null,
             expense: parseFloat(cost.cost)|| null,
             ordersCount: ordersResult && ordersResult.length,
-            ordersCost: ordersResult && ordersResult.length
-                        && ordersResult.reduce((sum, cur) => parseInt(sum, 10) + parseInt(cur, 10) )
+            ordersCharge: ordersResult && ordersResult.length
+                        && ordersResult.map(el => el.orderCharge)
+                                        .reduce((sum, cur) => parseFloat(sum) + parseFloat(cur) ),
+            ordersSum: ordersResult && ordersResult.length
+                        && ordersResult.map(el => el.orderCost)
+                                       .reduce((sum, cur) => parseInt(sum, 10) + parseInt(cur, 10) )
         };
 
     } catch (err) {
@@ -76,13 +77,15 @@ let yandex = async (password, login, shopId) => {
 };
 
 function __formOrderData(data) {
-    let $data           = data.all.split('\t');
-    let date            = moment($data[2], 'DD.MM.YYYY').format('YYYY-MM-DD');
-    let orderExpense    = data.cost.split(' ')[0];
+    let $data           = data.split('\t');
+    let date            = moment($data[0], 'DD.MM.YYYY').format('YYYY-MM-DD');
+    let orderExpense    = $data[2].split(' ')[0].replace('\n', '');
+    let orderCharge     = $data[4].replace(' у.е.', '');
 
     return {
         oderDate: date,
-        orderCost: orderExpense
+        orderCost: orderExpense,
+        orderCharge: orderCharge
     };
 }
 

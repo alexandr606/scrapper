@@ -45,6 +45,8 @@ let tiu = async (login, password) => {
             }
         });
 
+        console.log('tiu')
+
     return {
         catalogId   : 'tiu',
         ordersCount : result.length || 0,
