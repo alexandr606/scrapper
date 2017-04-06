@@ -1,8 +1,12 @@
 'use strict';
+const config = require('./config');
 
-const pool = require('../lib/db');
+const mysql      = require('mysql');
+
+
 
 let addData = (data) => {
+    let connection = mysql.createConnection(config);
 
     let query = `INSERT INTO data`;
 
@@ -49,13 +53,23 @@ let addData = (data) => {
         query += `(date, catalog_id, shop_id) VALUES ( NOW(), '${data.catalogId}', '${data.shopId}')`
     }
 
-    return pool.query(query, null, function (err, res) {
-        if(err) {
-            throw new Error(err);
+
+    connection.connect(function(err) {
+        if (err) {
+            console.error('error connecting: ' + err.stack);
+            return;
         }
 
-        return res.rowCount;
+        console.log('connected as id ' + connection.threadId);
     });
+
+    connection.query(query, function (error, results, fields) {
+        console.log(error)
+        if (error) throw error;
+        return results.rowCount;
+    });
+
+    connection.end();
 };
 
 module.exports = addData;
