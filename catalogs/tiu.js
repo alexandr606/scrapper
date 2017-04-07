@@ -72,7 +72,14 @@ function __formElementOut(data) {
     }
 
     let $data   = data.split('\n');
-    let cost    = parseInt($data[5].split(' ')[0]);
+
+    let cost;
+
+    if($data[5] && /\$/.test($data[5])) {
+        cost = parseInt($data[5].split(' ')[0]) * 122.07;
+    } else {
+        cost = parseInt($data[5].split(' ')[0]);
+    }
     let date    = __convertDate($data[1]);
 
     return {

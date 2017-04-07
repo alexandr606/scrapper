@@ -53,7 +53,7 @@ let zzap = async (login, password) => {
                 resultOrders.push(item);
             }
         });
-        console.log('zzap')
+        console.log('zzap');
 
         return {
             catalogId   : 'zzap',
