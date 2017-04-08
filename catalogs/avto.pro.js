@@ -24,13 +24,14 @@ let avtoPro = async (login, password) => {
             .type('input[name="login"]', login)
             .type('input[name="password"]', password)
             .click('button[type="submit"]')
-            .wait(1000)
+            .wait('dl.bill')
             .evaluate(()=> {
                 return document.querySelector('dl.bill').innerText.split(':')[1]
             });
 
         let expence = await nightmare
             .goto('https://avto.pro/user-expenditure-details/')
+            .wait('table')
             .evaluate(() => {
                 return [...document.querySelectorAll('table.ustat-expenditure tbody tr')]
                     .map(el => el.innerText);

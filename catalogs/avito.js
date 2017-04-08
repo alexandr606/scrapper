@@ -20,7 +20,7 @@ let avito = async (login, password) => {
             .type('input[name="login"]', login)
             .type('input[name="password"]', password)
             .click('.login-form-submit')
-            .wait('.context-balance__value')
+            .wait('span.context-balance__value')
             .evaluate(() => {
                 return document.querySelector('.context-balance__value').innerText;
             });
@@ -44,7 +44,7 @@ let avito = async (login, password) => {
                 formedExpence = formed;
             }
         });
-        console.log('avito')
+        console.log('avito');
         return {
             catalogId   : 'avito',
             balance     : balance && parseFloat(balance.replace(' ', '')),
