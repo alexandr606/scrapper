@@ -49,12 +49,20 @@ let process = async function () {
 
 
 async function writeData () {
-    let data = await process();
 
-    data.forEach( item => {
-        item.shopId = 'sm';
-        dbService(item);
-    });
+    try {
+        let data = await process();
+
+        data.forEach( item => {
+            if(item) {
+                item.shopId = 'sm';
+                dbService(item);
+            }
+        });
+    } catch (err) {
+        console.log(err);
+    }
+
 }
 
 writeData ();

@@ -48,9 +48,12 @@ let avtoPro = async (login, password) => {
         await nightmare.end();
 
         let exp = expence && expence[1].split('\t')[1];
+
+        unformedOrders = filterRuOrders(unformedOrders);
+
         let formedOrders = __getYesterdayOrders( __formOrders(unformedOrders) );
 
-        console.log('avtopro')
+        console.log('avtopro');
         return {
             catalogId   : 'avtopro',
             balance     : balance && parseFloat(balance.replace(',','.')) || null,
@@ -81,6 +84,25 @@ function __formOrders (data) {
 
         return { date: date, cost: cost };
     });
+}
+
+function filterRuOrders (data) {
+
+    if(!data || !data.length) {
+        return {};
+    };
+
+    let result = [];
+
+    data.forEach( order => {
+        let temp = order.split('\n');
+
+        if(temp.length && temp[temp.length-2] && !/UAH$/.test(temp[temp.length-2])) {
+            result.push(order);
+        }
+    });
+
+    return result;
 }
 
 function __getYesterdayOrders(data) {
