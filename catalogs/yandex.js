@@ -49,24 +49,25 @@ let yandex = async (password, login, shopId) => {
         orders.splice(0, 8);
 
         orders.forEach( order => {
-            let yesterday = moment().clone().subtract(1, 'days').startOf('day');
+            let yesterday   = moment().clone().subtract(1, 'days').startOf('day');
             let formedOrder = __formOrderData(order);
 
             if(yesterday.diff(moment(formedOrder.oderDate, 'YYYY-MM-DD'), 'days') === 0) {
                 ordersResult.push(formedOrder);
             }
         });
-        console.log('yandex')
+
+        console.log('yandex');
         return {
-            catalogId: 'yandex',
-            balance: parseFloat(cost.balance) || null,
-            clicks: parseInt(cost.clicks, 10)|| null,
-            expense: parseFloat(cost.cost)|| null,
-            ordersCount: ordersResult && ordersResult.length,
-            ordersCharge: ordersResult && ordersResult.length
+            catalogId       : 'yandex',
+            balance         : parseFloat(cost.balance) || null,
+            clicks          : parseInt(cost.clicks, 10)|| null,
+            expense         : parseFloat(cost.cost)|| null,
+            ordersCount     : ordersResult && ordersResult.length,
+            ordersCharge    : ordersResult && ordersResult.length
                         && ordersResult.map(el => el.orderCharge)
                                         .reduce((sum, cur) => parseFloat(sum) + parseFloat(cur) ),
-            ordersSum: ordersResult && ordersResult.length
+            ordersSum       : ordersResult && ordersResult.length
                         && ordersResult.map(el => el.orderCost)
                                        .reduce((sum, cur) => parseInt(sum, 10) + parseInt(cur, 10) )
         };
@@ -88,7 +89,6 @@ function __formOrderData(data) {
         orderCharge: orderCharge
     };
 }
-
 
 module.exports = yandex;
 
