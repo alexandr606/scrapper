@@ -54,7 +54,7 @@ async function writeData () {
         let data = await process();
 
         data.forEach( item => {
-            if(item) {
+            if(item && Object.keys(item).length > 0) {
                 item.shopId = 'sm';
                 dbService(item);
             }
