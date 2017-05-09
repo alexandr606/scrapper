@@ -34,6 +34,14 @@ let yandex = async (password, login, shopId) => {
                 return { balance, cost, clicks };
             });
 
+        let rating = await nightmare
+            .evaluate(() => {
+                let rating = document.querySelector('div.order-report div.order-report-inner strong');
+                console.log(rating);
+
+                return rating.innerText;
+            });
+
         let orders = await nightmare
             .click(`a[href="/stat-orders.xml?id=21322372"]`)
             .wait('table.dt')
@@ -62,6 +70,7 @@ let yandex = async (password, login, shopId) => {
             catalogId       : 'yandex',
             balance         : parseFloat(cost.balance) || null,
             clicks          : parseInt(cost.clicks, 10)|| null,
+            rating          : parseFloat(rating) || null,
             expense         : parseFloat(cost.cost)|| null,
             ordersCount     : ordersResult && ordersResult.length,
             ordersCharge    : ordersResult && ordersResult.length

@@ -51,6 +51,11 @@ let addData = (data) => {
         values.push(data.ordersCharge);
     }
 
+    if(typeof data.rating !== 'undefined') {
+        fields.push('rating');
+        values.push(data.rating);
+    }
+
     if(fields.length) {
         query += ` (${fields.join(', ')}, date, catalog_id, shop_id) `;
         query += `VALUES (${values.join(', ')}, NOW(), '${data.catalogId}', '${data.shopId}') `;
