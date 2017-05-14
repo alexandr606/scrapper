@@ -37,8 +37,6 @@ let yandex = async (password, login, shopId) => {
         let rating = await nightmare
             .evaluate(() => {
                 let rating = document.querySelector('div.order-report div.order-report-inner strong');
-                console.log(rating);
-
                 return rating.innerText;
             });
 
@@ -100,5 +98,4 @@ function __formOrderData(data) {
 }
 
 module.exports = yandex;
-
 

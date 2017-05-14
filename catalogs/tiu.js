@@ -22,11 +22,11 @@ let tiu = async (login, password) => {
             .type('#password', password)
             .click('#submit_login_button')
             .wait(1000)
-            .goto(`https://my.tiu.ru/cabinet/order_v2#All`)
+            .goto(`https://my.tiu.ru/cabinet/order/list?per_page=100`)
             .wait(1000)
             .evaluate(() => {
-                return [...document.querySelectorAll('.b-orders__table tbody tr.b-orders__table-row')]
-                    .map( el => el.innerText );
+                return [...document.querySelectorAll("tr[id^='item_']")]
+                    .map(el => el.innerText);
             })
             .end();
 
@@ -44,8 +44,6 @@ let tiu = async (login, password) => {
                 result.push(formedResult);
             }
         });
-
-        console.log('tiu')
 
     return {
         catalogId   : 'tiu',
@@ -75,11 +73,16 @@ function __formElementOut(data) {
 
     let cost;
 
-    if($data[5] && /\$/.test($data[5])) {
-        cost = parseInt($data[5].split(' ')[0]) * 122.07;
-    } else {
-        cost = parseInt($data[5].split(' ')[0]);
+    if($data[3]) {
+        cost = $data[3].replace(/\s/g, '');
+
+        if(/\$/.test($data[3])) {
+            cost = parseInt( cost.replace('$','') ) * 122.07;
+        } else {
+            cost = parseInt( cost.replace('руб.','') );
+        }
     }
+
     let date    = __convertDate($data[1]);
 
     return {
@@ -94,30 +97,7 @@ function __convertDate(date) {
         return 'Empty date';
     }
 
-    let splittedDate = date.split(' ');
-
-    if(splittedDate.length !== 2) {
-        return 'Invalid date';
-    }
-
-    let day = splittedDate[0];
-    let month = dates[date.split(' ')[1]];
-    return moment([config.year, month, day]).format('YYYY-MM-DD');
+    return moment(date, 'DD.MM.YYYY hh:mm').format('YYYY-MM-DD');
 }
-
-const dates = {
-    'дек.': '11',
-    'нояб.': '10',
-    'окт.': '09',
-    'сент.': '08',
-    'авг.': '07',
-    'июля.': '06',
-    'июня.': '05',
-    'мая': '04',
-    'апр.': '03',
-    'марта': '02',
-    'февр.': '01',
-    'янв.': '00',
-};
 
 module.exports = tiu;
