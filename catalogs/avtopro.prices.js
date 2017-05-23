@@ -67,7 +67,9 @@ module.exports.parsePrices = async (links, login, password) => {
             return nightmare.goto(link)
                 .wait(500)
                 .click('#js-btn-partslist-primary-showmore')
-                .wait(3000)
+                .wait(function () {
+                    return (document.querySelector('#js-btn-partslist-primary-showmore') !== null)
+                })
                 .evaluate( () => {
                     return [...document.querySelectorAll('tr.pl-partinfo')]
                         .map( el => el.innerText);
