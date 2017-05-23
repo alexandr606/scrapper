@@ -51,24 +51,14 @@ let avtoproPrice = async (login, password) => {
     }
 };
 
-module.exports.parsePrices = async (links, login, password) => {
+module.exports.parsePrices = async (links) => {
     try {
-        let linksOne = await nightmare
-            .viewport(1000, 500)
-            .goto(`https://avto.pro`)
-            .click('a[data-target="#log-in-form-container"')
-            .wait('input[name="login"]')
-            .type('input[name="login"]', login)
-            .type('input[name="password"]', password)
-            .click('button[type="submit"]')
-            .wait(500);
-
         let results = await Promise.all(links.map( link => {
             return nightmare.goto(link)
                 .wait(500)
                 .click('#js-btn-partslist-primary-showmore')
                 .wait(function () {
-                    return (document.querySelector('#js-btn-partslist-primary-showmore') !== null)
+                    return (document.querySelector('#js-btn-partslist-primary-showmore') === null)
                 })
                 .evaluate( () => {
                     return [...document.querySelectorAll('tr.pl-partinfo')]
