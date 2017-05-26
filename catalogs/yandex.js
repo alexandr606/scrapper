@@ -25,7 +25,7 @@ let yandex = async (password, login, shopId) => {
             //.click('.passport-Button')
             .wait('.order-report-last')
             .evaluate(() => {
-                let balance = document.querySelector('.order-report-last div strong:first-child').innerText;
+                let balance = document.querySelector('div.order-report-last div strong:first-child')[0].innerText;
                 let data = [...document.querySelectorAll('.statistic-tab_content table tbody tr ')]
                     .map( el => el.innerText);
 
@@ -35,7 +35,7 @@ let yandex = async (password, login, shopId) => {
             });
 
         let rating = await nightmare
-            .evaluate(() => {
+            .evaluate(() => {``
                 let rating = document.querySelector('div.order-report div.order-report-inner strong');
                 return rating.innerText;
             });
