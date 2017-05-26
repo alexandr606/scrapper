@@ -25,9 +25,7 @@ let yandex = async (password, login, shopId) => {
             //.click('.passport-Button')
             .wait('.order-report-last')
             .evaluate(() => {
-                let balance = [...document.querySelectorAll('div.order-report-last div strong')];
-
-
+                let balance = document.querySelector('div.order-report-last div strong').innerText;
                 let data = [...document.querySelectorAll('.statistic-tab_content table tbody tr ')]
                     .map( el => el.innerText);
 
@@ -66,8 +64,6 @@ let yandex = async (password, login, shopId) => {
         });
 
         console.log('yandex');
-
-        console.log(cost.balance, cost.balance[0])
         return {
             catalogId       : 'yandex',
             balance         : parseFloat(cost.balance) || null,
