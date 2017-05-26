@@ -25,7 +25,7 @@ let yandex = async (password, login, shopId) => {
             //.click('.passport-Button')
             .wait('.order-report-last')
             .evaluate(() => {
-                let balance = document.querySelector('.order-report-last div strong').innerText;
+                let balance = document.querySelector('.order-report-last div strong:first-child').innerText;
                 let data = [...document.querySelectorAll('.statistic-tab_content table tbody tr ')]
                     .map( el => el.innerText);
 
