@@ -27,9 +27,6 @@ let yandex = async (password, login, shopId) => {
             .evaluate(() => {
                 let balance = [...document.querySelectorAll('div.order-report-last div strong')];
 
-                console.log(balance, balance[0])
-
-                throw new Error;
 
                 let data = [...document.querySelectorAll('.statistic-tab_content table tbody tr ')]
                     .map( el => el.innerText);
@@ -69,6 +66,8 @@ let yandex = async (password, login, shopId) => {
         });
 
         console.log('yandex');
+
+        console.log(cost.balance, cost.balance[0])
         return {
             catalogId       : 'yandex',
             balance         : parseFloat(cost.balance) || null,
