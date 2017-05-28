@@ -7,17 +7,14 @@ let avtopro         = require('./catalogs/avtopro.prices');
 
 (function () {
     return LinksService.getLinks(function (links) {
-
-        return avtopro.parsePrices(links).then( result => {
-
-            return result.forEach( item => {
-                LinksService.saveParsedData(item);
-            });
+        let count = 0;
+        return avtopro.parsePrices(config.avto_pro.login, config.avto_pro.password, links).then( result => {
+            count++;
+            console.log(result, '#'+count);
 
         }).catch(err => {
             console.log(err);
         })
-
     });
 
 })();
