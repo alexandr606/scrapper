@@ -27,10 +27,10 @@ module.exports.saveLinks = function (data) {
     connection.end();
 };
 
-module.exports.getLinks = function (offset, done) {
+module.exports.getLinks = function (done) {
     let connection = mysql.createConnection(config);
 
-    let query = `SELECT link FROM links LIMIT 500 OFFSET ${offset}`;
+    let query = `SELECT link FROM links`;
 
     connection.connect(function(err) {
         if (err) {
