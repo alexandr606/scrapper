@@ -5,16 +5,22 @@ let LinksService    = require('./services/price.service');
 let avtopro         = require('./catalogs/avtopro.prices');
 
 
-let process = async () => {
+(function () {
     let parts = [0, 500, 1000, 1500, 2000];
 
     parts.forEach( part => {
-        LinksService.getLinks(part, async function (result) {
-            let res = result.map( i => i.link );
-            await avtopro.parsePrices(res);
+        return LinksService.getLinks(part, function (links) {
+
+            return avtopro.parsePrices(links).then( result => {
+
+                result.forEach( item => {
+                    LinksService.saveParsedData(item);
+                });
+
+            }).catch(err => {
+                console.log(err);
+            })
+
         });
-    })
-
-};
-
-process();
+    });
+})();

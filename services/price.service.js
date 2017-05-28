@@ -42,7 +42,7 @@ module.exports.getLinks = function (offset, done) {
     });
 
     connection.query(query, function (error, results, fields) {
-         // console.log(results);
+         //console.log(results);
          console.log(error);
         if (error) throw error;
         done(results);
@@ -52,9 +52,11 @@ module.exports.getLinks = function (offset, done) {
 };
 
 module.exports.saveParsedData = function (data) {
+    if(!data.length) return;
+
     let connection = mysql.createConnection(config);
 
-    let query =`INSERT INTO price (brand, art, description, seller, price) VALUES ?`;
+    let query =`INSERT INTO price (brand, art, description, seller, price, link) VALUES ?`;
 
     connection.connect(function(err) {
         if (err) {

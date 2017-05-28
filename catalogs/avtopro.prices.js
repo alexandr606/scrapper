@@ -53,43 +53,59 @@ let avtoproPrice = async (login, password) => {
 
 module.exports.parsePrices = async (links) => {
     try {
-        let results = await Promise.all(links.map( link => {
-            return nightmare.goto(link)
-                .wait(500)
-                .click('#js-btn-partslist-primary-showmore')
-                .wait(function () {
-                    return (document.querySelector('#js-btn-partslist-primary-showmore') === null)
-                })
-                .evaluate( () => {
+
+        let data = [];
+
+        for(let i=0; i < links.length; i++) {
+
+            await nightmare.goto(links[i].link)
+                .wait(500);
+
+            let btn = await nightmare.exists('#js-btn-partslist-primary-showmore');
+
+            if(btn) {
+                await nightmare.click('#js-btn-partslist-primary-showmore')
+                    .wait(function () {
+                        return (document.querySelector('#js-btn-partslist-primary-showmore') === null)
+                    })
+            }
+
+            data.push(
+                formResults(await nightmare.evaluate( () => {
                     return [...document.querySelectorAll('tr.pl-partinfo')]
                         .map( el => el.innerText);
-                })
-        }));
+                }), links[i].link)
+            );
+        }
 
         await nightmare.end();
 
-        return results.map( result => {
-            LinksService.saveParsedData(formResults(result));
-        });
+        return data;
     } catch (err) {
-        console.error(err);
+        console.log(err);
+        return err;
     }
-
 };
 
-function formResults(data) {
-    return data.map( item => {
+function formResults (data, link) {
+    if(!data || !Array.isArray(data) || !data.length) {
+        return [];
+    }
+
+    return data.map( function (item) {
+
         let temp = item.split('\t');
 
-        let data = {
+        let res = {
             brand: temp[0],
             art: temp[1],
             description: temp[2],
-            price: temp[4].replace('Б/У', '').replace(' ', '').replace(',', '.'),
-            seller: temp[5]
+            price: temp[4].replace('Б/У', '').replace(/ /g, '').replace(',', '.'),
+            seller: temp[5],
+            link: link
         };
 
-        return [data.brand, data.art, data.description, data.seller, data.price];
+        return [res.brand, res.art, res.description, res.seller, res.price, res.link];
     });
 
 }
