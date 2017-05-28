@@ -51,10 +51,20 @@ let avtoproPrice = async (login, password) => {
     }
 };
 
-module.exports.parsePrices = async (links) => {
+module.exports.parsePrices = async (login, password, links) => {
     try {
 
         let data = [];
+
+        await nightmare
+            .viewport(1000, 500)
+            .goto(`https://avto.pro`)
+            .click('a[data-target="#log-in-form-container"')
+            .wait('input[name="login"]')
+            .type('input[name="login"]', login)
+            .type('input[name="password"]', password)
+            .click('button[type="submit"]')
+            .wait(1000);
 
         for(let i=0; i < links.length; i++) {
 
@@ -70,12 +80,12 @@ module.exports.parsePrices = async (links) => {
                     })
             }
 
-            data.push(
+            data.push(await LinksService.saveParsedData(
                 formResults(await nightmare.evaluate( () => {
                     return [...document.querySelectorAll('tr.pl-partinfo')]
                         .map( el => el.innerText);
                 }), links[i].link)
-            );
+            ));
         }
 
         await nightmare.end();
@@ -100,7 +110,7 @@ function formResults (data, link) {
             brand: temp[0],
             art: temp[1],
             description: temp[2],
-            price: temp[4].replace('Б/У', '').replace(/ /g, '').replace(',', '.'),
+            price: temp[4].replace('ОПТ', '').replace('Б/У', '').replace(/ /g, '').replace(',', '.'),
             seller: temp[5],
             link: link
         };
