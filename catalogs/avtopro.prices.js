@@ -64,7 +64,18 @@ module.exports.parsePrices = async (login, password, links) => {
             .type('input[name="login"]', login)
             .type('input[name="password"]', password)
             .click('button[type="submit"]')
-            .wait(1000);
+            .wait(1000)
+            .goto('https://avto.pro/zapchasti-BW002R-BOSCH/')
+            .wait(500)
+            .click('a[href="#js-modal-preferences"]')
+            .select('#js-form-preferences > div.clearfix > div:nth-child(2) > select', 'UAH')
+            .wait(500)
+            .click('#js-preferences-globe')
+            .wait(500)
+            .click('a[data-city="Харьков"')
+            .wait(500)
+            .click('#js-form-preferences > button')
+            .wait(3000);
 
         for(let i=0; i < links.length; i++) {
 
