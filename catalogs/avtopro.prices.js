@@ -82,25 +82,31 @@ module.exports.parsePrices = async (login, password, links) => {
             await nightmare.goto(links[i].link)
                 .wait(500);
 
-            let btn = await nightmare.exists('#js-btn-partslist-primary-showmore');
-
-            if(btn) {
-                await nightmare.click('#js-btn-partslist-primary-showmore')
-                    .wait(function () {
-                        return (document.querySelector('#js-btn-partslist-primary-showmore') === null)
-                    })
-            }
-
-            let originArt = await nightmare.evaluate( () => {
-                return document.querySelector('#js-global-vars').getAttribute('data-paramcode');
+            let err = await nightmare.evaluate( () => {
+                return document.querySelector('#txt-global > div.er_name');
             });
 
-            data.push(await LinksService.saveParsedData(
-                formResults(await nightmare.evaluate( () => {
-                    return [...document.querySelectorAll('tr.pl-partinfo')]
-                        .map( el => el.innerText);
-                }), links[i].link, originArt)
-            ));
+            if(!err) {
+                let btn = await nightmare.exists('#js-btn-partslist-primary-showmore');
+
+                if(btn) {
+                    await nightmare.click('#js-btn-partslist-primary-showmore')
+                        .wait(function () {
+                            return (document.querySelector('#js-btn-partslist-primary-showmore') === null)
+                        })
+                }
+
+                let originArt = await nightmare.evaluate( () => {
+                    return document.querySelector('#js-global-vars').getAttribute('data-paramcode');
+                });
+
+                data.push(await LinksService.saveParsedData(
+                    formResults(await nightmare.evaluate( () => {
+                        return [...document.querySelectorAll('tr.pl-partinfo')]
+                            .map( el => el.innerText);
+                    }), links[i].link, originArt)
+                ));
+            }
         }
 
         await nightmare.end();
