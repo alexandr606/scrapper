@@ -6,7 +6,7 @@ const Nightmare = require('nightmare');
 const nightmare = new Nightmare({show: true });
 
 
-let avtoproPrice = async (login, password) => {
+module.exports.avtoproPriceLinks = async (login, password) => {
     try {
         let linksOne = await nightmare
             .viewport(1000, 500)
@@ -91,11 +91,15 @@ module.exports.parsePrices = async (login, password, links) => {
                     })
             }
 
+            let originArt = await nightmare.evaluate( () => {
+                return document.querySelector('#js-global-vars').getAttribute('data-paramcode');
+            });
+
             data.push(await LinksService.saveParsedData(
                 formResults(await nightmare.evaluate( () => {
                     return [...document.querySelectorAll('tr.pl-partinfo')]
                         .map( el => el.innerText);
-                }), links[i].link)
+                }), links[i].link, originArt)
             ));
         }
 
@@ -108,7 +112,7 @@ module.exports.parsePrices = async (login, password, links) => {
     }
 };
 
-function formResults (data, link) {
+function formResults (data, link, originArt) {
     if(!data || !Array.isArray(data) || !data.length) {
         return [];
     }
@@ -123,10 +127,11 @@ function formResults (data, link) {
             description: temp[2],
             price: temp[4].replace('ОПТ', '').replace('Б/У', '').replace(/ /g, '').replace(',', '.'),
             seller: temp[5],
-            link: link
+            link: link,
+            originArt: originArt
         };
 
-        return [res.brand, res.art, res.description, res.seller, res.price, res.link];
+        return [res.brand, res.art, res.description, res.seller, res.price, res.link, res.originArt];
     });
 
 }
