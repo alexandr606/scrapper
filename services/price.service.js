@@ -56,7 +56,7 @@ module.exports.saveParsedData = function (data) {
 
     let connection = mysql.createConnection(config);
 
-    let query =`INSERT INTO price (brand, art, description, seller, price, link, origin_art) VALUES ?`;
+    let query =`INSERT INTO price (brand, art, description, seller, price, link, origin_art, differ) VALUES ?`;
 
     connection.connect(function(err) {
         if (err) {

@@ -100,11 +100,21 @@ module.exports.parsePrices = async (login, password, links) => {
                     return document.querySelector('#js-global-vars').getAttribute('data-paramcode');
                 });
 
+                let smPrice = await nightmare.evaluate( () => {
+                    return document.querySelector('tr[data-sellerid="46616"]')
+                        .querySelector('td:nth-child(5)').getAttribute('data-value');
+                });
+
+                if(!smPrice) {
+                    await nightmare.end();
+                    return;
+                }
+
                 data.push(await LinksService.saveParsedData(
                     formResults(await nightmare.evaluate( () => {
                         return [...document.querySelectorAll('tr.pl-partinfo')]
                             .map( el => el.innerText);
-                    }), links[i].link, originArt)
+                    }), links[i].link, originArt, smPrice)
                 ));
             }
         }
@@ -118,7 +128,7 @@ module.exports.parsePrices = async (login, password, links) => {
     }
 };
 
-function formResults (data, link, originArt) {
+function formResults (data, link, originArt, smPrice) {
     if(!data || !Array.isArray(data) || !data.length) {
         return [];
     }
@@ -127,17 +137,28 @@ function formResults (data, link, originArt) {
 
         let temp = item.split('\t');
 
+        let price = temp[4].replace('ОПТ', '').replace('Б/У', '').replace(/ /g, '').replace(',', '.');
+
         let res = {
             brand: temp[0],
             art: temp[1],
             description: temp[2],
-            price: temp[4].replace('ОПТ', '').replace('Б/У', '').replace(/ /g, '').replace(',', '.'),
+            price: price,
             seller: temp[5],
             link: link,
-            originArt: originArt
+            originArt: originArt,
+            differ: Number(smPrice) - Number(price)
         };
 
-        return [res.brand, res.art, res.description, res.seller, res.price, res.link, res.originArt];
+        return [
+            res.brand,
+            res.art,
+            res.description,
+            res.seller,
+            res.price,
+            res.link,
+            res.originArt,
+            isNaN(res.differ) ? 0 : res.differ
+        ];
     });
-
-}
+};
