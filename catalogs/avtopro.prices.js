@@ -24,14 +24,14 @@ module.exports.avtoproPriceLinks = async (login, password) => {
             });
 
         let linksTwo = await nightmare
-            .goto('https://avto.pro/warehouses/23038/.aspx?step=1000&pk=1!4!NA--&rk=1!24!MTY5MztWVzIxNEM7MDAwMA--&page=2')
+            .goto('https://avto.pro/warehouses/23038/.aspx?step=1000&pk=1!4!NA--&rk=1!24!NTgxO0ZPMjI4Uk9EOzAwMDA-&page=2')
             .evaluate(()=> {
                 return [...document.querySelectorAll('a.whp-code')]
                     .map( el => [el.href]);
             });
 
         let linksTree = await nightmare
-            .goto('https://avto.pro/warehouses/23038/.aspx?step=1000&pk=1!4!OQ--&rk=1!20!MTY5MztOSTA0MjswMDAw&page=3')
+            .goto('https://avto.pro/warehouses/23038/.aspx?step=1000&pk=1!4!OQ--&rk=1!20!NDEzOzQ2NjMxMDswMDAw&page=3')
             .evaluate(()=> {
                 return [...document.querySelectorAll('a.whp-code')]
                     .map( el => [el.href]);

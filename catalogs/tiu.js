@@ -77,7 +77,7 @@ function __formElementOut(data) {
         cost = $data[3].replace(/\s/g, '');
 
         if(/\$/.test($data[3])) {
-            cost = parseInt( cost.replace('$','') ) * 122.07;
+            cost = parseInt( cost.replace('$','') ) * 58.43;
         } else {
             cost = parseInt( cost.replace('руб.','') );
         }
