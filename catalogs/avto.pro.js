@@ -47,7 +47,7 @@ let avtoPro = async (login, password) => {
 
         await nightmare.end();
 
-        let exp = expence && expence[0].split('\t')[1];
+        let exp = expence && expence[1].split('\t')[1];
 
         unformedOrders = filterRuOrders(unformedOrders);
 
