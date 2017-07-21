@@ -24,7 +24,7 @@ let avito = async (login, password) => {
             .click('.login-form-submit')
             .wait('span.context-balance__value')
             .evaluate(() => {
-                return document.querySelector('.context-balance__value').innerText;
+                return document.querySelector('span.context-balance__value').innerText;
             });
 
         let expense = await nightmare
@@ -47,6 +47,9 @@ let avito = async (login, password) => {
             }
         });
         console.log('avito');
+
+        console.log('avito');
+
         return {
             catalogId   : 'avito',
             balance     : balance && parseFloat(balance.replace(' ', '')),
