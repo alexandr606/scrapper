@@ -55,6 +55,8 @@ let zzap = async (login, password) => {
         });
         console.log('zzap');
 
+        balance = balance.replace(' ', '');
+
         return {
             catalogId   : 'zzap',
             balance     : balance && parseFloat(balance.split(' ')[0]),

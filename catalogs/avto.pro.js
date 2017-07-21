@@ -102,7 +102,7 @@ function filterRuOrders (data) {
         }
     });
 
-    return result;
+    return [];
 }
 
 function __getYesterdayOrders(data) {

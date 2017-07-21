@@ -17,12 +17,15 @@ const moment    = require('moment');
 
 let yandex = async (password, login, shopId) => {
     try {
-        let cost = await nightmare
+        await nightmare
             .goto(`https://partner.market.yandex.ru/order.xml?id=21322372`)
             .type('input[name="login"]', login)
-            .type('input[name="passwd"]', password)
-            .click('.domik-submit-button')
-            //.click('.passport-Button')
+            .type('input[name="passwd"]', password);
+
+        let submitButton = await nightmare.exists('.domik-submit-button')
+            ? '.passport-Button' : '.domik-submit-button';
+
+        let cost = await nightmare.click(submitButton)
             .wait('.order-report-last')
             .evaluate(() => {
                 let balance = document.querySelector('div.order-report-last div strong').innerText;
