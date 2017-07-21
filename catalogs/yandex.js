@@ -23,7 +23,7 @@ let yandex = async (password, login, shopId) => {
             .type('input[name="passwd"]', password);
 
         let submitButton = await nightmare.exists('.domik-submit-button')
-            ? '.passport-Button' : '.domik-submit-button';
+            ? '.domik-submit-button' : '.passport-Button';
 
         let cost = await nightmare.click(submitButton)
             .wait('.order-report-last')
