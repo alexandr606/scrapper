@@ -74,7 +74,7 @@ let addData = (data) => {
     });
 
     connection.query(query, function (error, results, fields) {
-        console.log(error)
+        console.log(error, query)
         if (error) throw error;
         return results.rowCount;
     });
