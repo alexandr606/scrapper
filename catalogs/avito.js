@@ -2,7 +2,9 @@
 
 const Nightmare = require('nightmare');
 const nightmare = new Nightmare({ show: true });
-const moment    = require('moment');
+const moment = require('moment-timezone');
+
+const TIMEZONE = 'Europe/Kiev';
 
 /*
 returning values
@@ -38,7 +40,7 @@ let avito = async (login, password) => {
 
         expense.forEach( item => {
             let formed = __formExpense(item);
-            let yesterday = moment().clone().subtract(1, 'days').startOf('day');
+            let yesterday = moment.tz(moment(), TIMEZONE).clone().subtract(1, 'days').startOf('day');
 
             if( yesterday.diff(moment(formed.date, 'YYYY-MM-DD'), 'days') === 0 ) {
                 formedExpence = formed;

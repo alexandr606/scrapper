@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
     "mysql": "^2.13.0",
     "nightmare": "^2.10.0",
     "pg": "^6.1.5"
