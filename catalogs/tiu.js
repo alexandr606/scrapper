@@ -15,20 +15,39 @@ const config    = require('../config.json');
 
 let tiu = async (login, password) => {
     try {
-        let res = await nightmare
+        let olVersionSelector = 'span.b-label_type_header-version';
+        let oldVersionLink    = 'https://my.tiu.ru/cabinet/order?version_type=old_version';
+        let newVersionLink    = 'https://my.tiu.ru/cabinet/order?version_type=new_version';
+
+        let start = await nightmare
             .goto(`https://my.tiu.ru/cabinet/order_v2`)
             .wait('#phone_email')
             .type('#phone_email', login)
             .type('#password', password)
             .click('#submit_login_button')
-            .wait(1000)
-            .goto(`https://my.tiu.ru/cabinet/order/list?per_page=100`)
-            .wait(1000)
-            .evaluate(() => {
+            .wait(1000);
+
+        let isNewVersion = nightmare.exists('span.b-label_type_header-version a');
+
+        if(isNewVersion) {
+            await nightmare.goto(oldVersionLink)
+                .wait(1000);
+        }
+
+        await nightmare.goto(`https://my.tiu.ru/cabinet/order/list?per_page=100`)
+            .wait(1000);
+
+        let res = await nightmare.evaluate(() => {
                 return [...document.querySelectorAll("tr[id^='item_']")]
                     .map(el => el.innerText);
-            })
-            .end();
+            });
+
+        if(isNewVersion) {
+            await nightmare.goto(newVersionLink)
+                .wait(1000);
+        };
+
+        await nightmare.end();
 
         let result = [];
 
