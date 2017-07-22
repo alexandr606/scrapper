@@ -48,8 +48,6 @@ let avito = async (login, password) => {
         });
         console.log('avito');
 
-        console.log('avito');
-
         return {
             catalogId   : 'avito',
             balance     : balance && parseFloat(balance.replace(' ', '')),
