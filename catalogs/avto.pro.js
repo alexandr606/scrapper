@@ -32,6 +32,9 @@ let avtoPro = async (login, password) => {
         let expence = await nightmare
             .goto('https://avto.pro/user-expenditure-details/')
             .wait('table')
+            .click('#expenditure_statistics_daterange')
+            .click('div.daterangepicker.dropdown-menu.opensright > div.ranges > ul > li:nth-child(1)')
+            .click('#site_content > div > div.primary_part.no-third-col > article > form > button')
             .evaluate(() => {
                 return [...document.querySelectorAll('table.ustat-expenditure tbody tr')]
                     .map(el => el.innerText);
@@ -47,7 +50,7 @@ let avtoPro = async (login, password) => {
 
         await nightmare.end();
 
-        let exp = expence && expence[1].split('\t')[1];
+        let exp = expence && expence.length && expence[1].split('\t')[1];
 
         unformedOrders = filterRuOrders(unformedOrders);
 
