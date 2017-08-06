@@ -51,8 +51,8 @@ let avito = async (login, password) => {
         return {
             catalogId   : 'avito',
             balance     : balance && parseFloat(balance.replace(' ', '')),
-            expense     : formedExpence.cost,
-            clicks      : parseInt(formedExpence.clicks, 10)
+            expense     : formedExpence.cost || 0,
+            clicks      : parseInt(formedExpence.clicks, 10) || 0
         };
 
     } catch (err) {
