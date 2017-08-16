@@ -1,7 +1,7 @@
 'use strict';
 
 const Nightmare = require('nightmare');
-const nightmare = new Nightmare({ show: true });
+const nightmare = new Nightmare({ show: true, waitTimeout: 150000 });
 const moment = require('moment-timezone');
 
 const TIMEZONE = 'Europe/Kiev';
@@ -29,6 +29,7 @@ let avito = async (login, password) => {
 
         let expense = await nightmare
             .goto('https://www.avito.ru/profile/context/stats')
+            .wait('table.context-table')
             .evaluate(() => {
                 return [...document.querySelectorAll('table.context-table tbody tr')]
                     .map(el => el.innerText);
