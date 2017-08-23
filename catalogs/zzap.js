@@ -34,7 +34,7 @@ let zzap = async (login, password) => {
             .goto('https://www.zzap.ru/user/ordersget.aspx')
             .wait(3000)
             .evaluate(() => {
-                return [...document.querySelectorAll('table#ctl00_BodyPlace_OrdersGridView_DXMainTable tbody tr.dxgvDataRow_ZzapAqua')]
+                return [...document.querySelectorAll('tr[id^="ctl00_BodyPlace_OrdersGridView_DXDataRow"]')]
                     .map(el => el.innerText);
             });
 
@@ -79,9 +79,15 @@ function __formOrdersResult(data) {
         return [];
     }
 
-    let arrData = data.split('\t');
+    let arrData = data.split('\t').filter( item => {
+        return item !== '';
+    });
 
-    let costData = parseInt(arrData[7].split('\n')[1].replace(' ', ''), 10);
+    let formattedCost = arrData[5].split('\n').filter(item => {
+        return item !== '';
+    });
+
+    let costData = Number(formattedCost[1].replace(' ', '').replace('р.', ''));
 
     return {
         date: arrData[1],
