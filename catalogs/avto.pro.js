@@ -14,7 +14,7 @@ const moment = require('moment');
  }
 */
 
-let avtoPro = async (login, password) => {
+let avtoPro = async (login, password, catalogID) => {
     try {
         let balance = await nightmare
             .viewport(1000, 500)
@@ -26,8 +26,12 @@ let avtoPro = async (login, password) => {
             .click('button[type="submit"]')
             .wait('dl.bill')
             .evaluate(()=> {
-                return document.querySelector('dl.bill').innerText.split(':')[1]
+                return document.querySelector('dl.bill:nth-child(1) dd.pull-right').innerText;
             });
+
+        let bonus = await nightmare.evaluate(()=> {
+            return document.querySelector('dl.bill:nth-child(2) dd.pull-right').innerText;
+        });
 
         let expence = await nightmare
             .goto('https://avto.pro/user-expenditure-details/')
@@ -42,7 +46,7 @@ let avtoPro = async (login, password) => {
 
         let unformedOrders = await nightmare
             .goto('https://avto.pro/orders/?offset=0#')
-            .wait('.order-preview')
+            .wait(1000)
             .evaluate(() => {
                 return [...document.querySelectorAll('.order-preview')]
                     .map(el => el.innerText);
@@ -52,14 +56,20 @@ let avtoPro = async (login, password) => {
 
         let exp = expence && expence.length && expence[1].split('\t')[1];
 
-        unformedOrders = filterRuOrders(unformedOrders);
+        let formedOrders = [];
 
-        let formedOrders = __getYesterdayOrders( __formOrders(unformedOrders) );
+        if(unformedOrders && unformedOrders.length) {
+            unformedOrders = filterRuOrders(unformedOrders);
+
+            formedOrders = __getYesterdayOrders( __formOrders(unformedOrders) );
+        }
+
+        let summaryBalance = parseFloat(balance.replace(',','.')) + parseFloat(bonus.replace(',','.'));
 
         console.log('avtopro');
         return {
-            catalogId   : 'avtopro',
-            balance     : balance && parseFloat(balance.replace(',','.')) || null,
+            catalogId   : catalogID,
+            balance     : summaryBalance || null,
             expense     : exp && parseFloat(exp.replace('-','')) || null,
             ordersCount : formedOrders.length,
             ordersSum   : formedOrders.length && formedOrders

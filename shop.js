@@ -39,7 +39,13 @@ let process = async function () {
             config.avito.password
         );
 
-        return [yandexData, avtoProData, tiuData, zzapData, avitoData];
+        let avtoProRuData = await avtoPro(
+            config.avtopro_ru.login,
+            config.avtopro_ru.password,
+            'avtopro_ru'
+        );
+
+        return [yandexData, avtoProData, tiuData, zzapData, avitoData, avtoProRuData];
     } catch (err) {
         console.log(err);
         throw new Error(err);
