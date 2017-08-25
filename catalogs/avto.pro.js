@@ -30,7 +30,12 @@ let avtoPro = async (login, password, catalogID) => {
             });
 
         let bonus = await nightmare.evaluate(()=> {
-            return document.querySelector('dl.bill:nth-child(2) dd.pull-right').innerText;
+            let bonus = document.querySelector('dl.bill:nth-child(2) dd.pull-right');
+            if(bonus) {
+                return bonus.innerText && bonus.innerText.replace(',','.');
+            }
+
+            return 0;
         });
 
         let expence = await nightmare
@@ -54,7 +59,7 @@ let avtoPro = async (login, password, catalogID) => {
 
         await nightmare.end();
 
-        let exp = expence && expence.length && expence[1].split('\t')[1];
+        let exp = __getCorrectExpense(expence);
 
         let formedOrders = [];
 
@@ -64,13 +69,13 @@ let avtoPro = async (login, password, catalogID) => {
             formedOrders = __getYesterdayOrders( __formOrders(unformedOrders) );
         }
 
-        let summaryBalance = parseFloat(balance.replace(',','.')) + parseFloat(bonus.replace(',','.'));
+        let summaryBalance = parseFloat(balance.replace(',','.')) + parseFloat(bonus);
 
         console.log('avtopro');
         return {
             catalogId   : catalogID,
             balance     : summaryBalance || null,
-            expense     : exp && parseFloat(exp.replace('-','')) || null,
+            expense     : exp,
             ordersCount : formedOrders.length,
             ordersSum   : formedOrders.length && formedOrders
                 .map(item => item.cost)
@@ -82,6 +87,43 @@ let avtoPro = async (login, password, catalogID) => {
         console.log(err)
     }
 };
+
+function __getCorrectExpense (exp) {
+    if(!exp.length) {
+        return 0;
+    }
+
+    let expenseOne = exp[0].split('\t');
+    let expenseTwo = exp[1].split('\t');
+
+    let cost;
+
+    if(__testExpense(expenseOne)) {
+        cost = expenseOne[1] && parseFloat(expenseOne[1].replace('-',''));
+    } else if(__testExpense(expenseTwo)){
+        cost = expenseTwo[1] && parseFloat(expenseTwo[1].replace('-',''));
+    } else {
+        cost = 0;
+    }
+
+    return cost;
+}
+
+function __testExpense(expense) {
+    let expenseDate = expense[0].split(' ');
+
+    let date = moment(
+        [
+            Number(expenseDate[2]),
+            Number(dates[expenseDate[1]]),
+            Number(expenseDate[0])
+        ]
+    ).format('YYYY-MM-DD');
+
+    let yesterday = moment().subtract(1, 'days').startOf('day');
+
+    return yesterday.diff(moment(date, 'YYYY-MM-DD'), 'days') === 0;
+}
 
 
 function __formOrders (data) {
@@ -138,5 +180,21 @@ function __getYesterdayOrders(data) {
 
     return result;
 }
+
+const dates = {
+    'декабря'   : '11',
+    'ноября'    : '10',
+    'октября'   : '09',
+    'сентября'  : '08',
+    'августа'   : '07',
+    'июля'      : '06',
+    'июня'      : '05',
+    'мая'       : '04',
+    'апреля'    : '03',
+    'марта'     : '02',
+    'февраля'   : '01',
+    'января'    : '00',
+};
+
 
 module.exports = avtoPro;

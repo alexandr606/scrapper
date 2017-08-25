@@ -20,7 +20,8 @@ let process = async function () {
 
         let avtoProData = await avtoPro(
             config.avto_pro.login,
-            config.avto_pro.password
+            config.avto_pro.password,
+            'avtopro'
         );
 
         let tiuData = await tiu(
