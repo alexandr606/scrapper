@@ -60,12 +60,12 @@ async function writeData () {
     try {
         let data = await process();
 
-        data.forEach( item => {
-            if(item && Object.keys(item).length > 0) {
-                item.shopId = 'sm';
-                dbService(item);
+        for(let i=0; i< data.length; i++) {
+            if(data[i] && Object.keys(data[i]).length > 0) {
+                data[i].shopId = 'sm';
+                await dbService(data[i]);
             }
-        });
+        }
     } catch (err) {
         console.log(err);
     }

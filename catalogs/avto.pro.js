@@ -19,6 +19,7 @@ let avtoPro = async (login, password, catalogID) => {
         let balance = await nightmare
             .viewport(1000, 500)
             .goto(`https://avto.pro`)
+            .wait(1000)
             .click('a[data-target="#log-in-form-container"')
             .wait('input[name="login"]')
             .type('input[name="login"]', login)
@@ -56,6 +57,9 @@ let avtoPro = async (login, password, catalogID) => {
                 return [...document.querySelectorAll('.order-preview')]
                     .map(el => el.innerText);
             });
+
+        let logout = await nightmare.goto('https://avto.pro/.aspx?logout=true')
+            .wait(1000);
 
         await nightmare.end();
 
