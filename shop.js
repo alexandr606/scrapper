@@ -60,11 +60,15 @@ async function writeData () {
     try {
         let data = await process();
 
-        for(let i=0; i< data.length; i++) {
-            if(data[i] && Object.keys(data[i]).length > 0) {
-                data[i].shopId = 'sm';
-                await dbService(data[i]);
-            }
+        if(data.length > 0) {
+            await Promise.all(data.map( item => {
+                if(item && Object.keys(item).length > 0) {
+                    item.shopId = 'sm';
+                    return dbService(item);
+                }
+
+                return null;
+            }))
         }
     } catch (err) {
         console.log(err);
