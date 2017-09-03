@@ -18,35 +18,35 @@ let process = async function () {
             config.yandex.shopId
         );
 
-        let avtoProData = await avtoPro(
-            config.avto_pro.login,
-            config.avto_pro.password,
-            'avtopro'
-        );
+        // let avtoProData = await avtoPro(
+        //     config.avto_pro.login,
+        //     config.avto_pro.password,
+        //     'avtopro'
+        // );
 
-        let tiuData = await tiu(
-            config.tiu.login,
-            config.tiu.password
-        );
+        // let avtoProRuData = await avtoPro(
+        //     config.avtopro_ru.login,
+        //     config.avtopro_ru.password,
+        //     'avtopro_ru'
+        // );
+        //
+        // let tiuData = await tiu(
+        //     config.tiu.login,
+        //     config.tiu.password
+        // );
+        //
+        // let zzapData = await zzap(
+        //     config.zzap.login,
+        //     config.zzap.password
+        // );
+        //
+        // let avitoData = await avito(
+        //     config.avito.login,
+        //     config.avito.password
+        // );
 
-        let zzapData = await zzap(
-            config.zzap.login,
-            config.zzap.password
-        );
 
-
-        let avitoData = await avito(
-            config.avito.login,
-            config.avito.password
-        );
-
-        let avtoProRuData = await avtoPro(
-            config.avtopro_ru.login,
-            config.avtopro_ru.password,
-            'avtopro_ru'
-        );
-
-        return [yandexData, avtoProData, tiuData, zzapData, avitoData, avtoProRuData];
+        return [yandexData];
     } catch (err) {
         console.log(err);
         throw new Error(err);
