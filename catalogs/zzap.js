@@ -22,9 +22,9 @@ let zzap = async (login, password) => {
             .type('#ctl00_BodyPlace_LogonFormCallbackPanel_LogonFormLayout_AddrEmail1TextBox_I', login)
             .wait('#ctl00_BodyPlace_LogonFormCallbackPanel_LogonFormLayout_PasswordTextBox_I')
             .type('#ctl00_BodyPlace_LogonFormCallbackPanel_LogonFormLayout_PasswordTextBox_I', password)
-            .click('.dx-vam')
-            .wait(2000)
-            .click('#MessagePopupButton_I')
+            .click('#ctl00_BodyPlace_LogonFormCallbackPanel_LogonFormLayout_LogonButton_CD')
+            .wait('#MessagePopupButton')
+            .click('#MessagePopupButton')
             .wait(5000)
             .evaluate(() => {
                 return [...document.querySelectorAll('#ctl00_BodyPlace_Information b')][1].innerText;
