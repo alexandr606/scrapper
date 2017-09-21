@@ -58,7 +58,7 @@ let yandex = async (password, login, shopId) => {
         orders.splice(0, 8);
 
         orders.forEach( order => {
-            let yesterday   = moment().clone().subtract(1, 'days').startOf('day');
+            let yesterday   = moment().clone().subtract(2, 'days').startOf('day');
             let formedOrder = __formOrderData(order);
 
             if(yesterday.diff(moment(formedOrder.oderDate, 'YYYY-MM-DD'), 'days') === 0) {
