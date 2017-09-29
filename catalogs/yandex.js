@@ -93,6 +93,7 @@ let yandex = async (password, login, shopId) => {
 };
 
 function __formOrderData(data) {
+    console.log(data, 'lol')
     let $data           = data.split('\t');
     let date            = moment($data[0], 'DD.MM.YYYY').format('YYYY-MM-DD');
     let orderExpense    = $data[2].split(' ')[0].replace('\n', '');
