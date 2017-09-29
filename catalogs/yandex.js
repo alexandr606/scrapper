@@ -32,6 +32,11 @@ let yandex = async (password, login, shopId) => {
                 let data = [...document.querySelectorAll('.statistic-tab_content table tbody tr ')]
                     .map( el => el.innerText);
 
+                console.log(data[data.length-3], 'data[data.length-3]')
+                console.log(data[0], 'cost')
+                console.log(balance, 'balance')
+
+
                 let cost = data[data.length-3].split('\t')[2];
                 let clicks = data[0].split('\t')[2];
                 return { balance, cost, clicks };
