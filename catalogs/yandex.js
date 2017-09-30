@@ -32,14 +32,7 @@ let yandex = async (password, login, shopId) => {
                 let data = [...document.querySelectorAll('.statistic-tab_content table tbody tr ')]
                     .map( el => el.innerText);
 
-                console.log(data[data.length-3], 'data[data.length-3]')
-                console.log(data[0], 'cost')
-                console.log(balance, 'balance')
-
-
-                let cost = data[data.length-3].split('\t')[2];
-                let clicks = data[0].split('\t')[2];
-                return { balance, cost, clicks };
+                return { balance, data };
             });
 
         let rating = await nightmare
@@ -71,13 +64,18 @@ let yandex = async (password, login, shopId) => {
             }
         });
 
+        console.log(cost);
+
+        let expense = cost.data[cost.data.length-3].split('\t')[2];
+        let clicks  = cost.data[0].split('\t')[2];
+
         console.log('yandex');
         return {
             catalogId       : 'yandex',
             balance         : parseFloat(cost.balance) || null,
-            clicks          : parseInt(cost.clicks, 10)|| null,
+            clicks          : parseInt(clicks, 10)|| null,
             rating          : parseFloat(rating) || null,
-            expense         : parseFloat(cost.cost)|| null,
+            expense         : parseFloat(expense)|| null,
             ordersCount     : ordersResult && ordersResult.length,
             ordersCharge    : ordersResult && ordersResult.length
                         && ordersResult.map(el => el.orderCharge)
