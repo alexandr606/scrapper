@@ -29,7 +29,7 @@ let yandex = async (password, login, shopId) => {
             .wait('.order-report-last')
             .evaluate(() => {
                 let balance = document.querySelector('div.order-report-last div strong').innerText;
-                let data = [...document.querySelectorAll('.statistic-tab_content table tbody tr ')]
+                let data = [...document.querySelectorAll('.tab-content table tbody tr')]
                     .map( el => el.innerText);
 
                 return { balance, data };
