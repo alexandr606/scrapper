@@ -9,29 +9,33 @@ const nightmare = new Nightmare({show: true });
 module.exports.avtoproPriceLinks = async (login, password) => {
     try {
         let linksOne = await nightmare
-            .viewport(1000, 500)
+            .viewport(1400, 500)
             .goto(`https://avto.pro`)
-            .click('a[data-target="#log-in-form-container"')
-            .wait('input[name="login"]')
-            .type('input[name="login"]', login)
-            .type('input[name="password"]', password)
-            .click('button[type="submit"]')
             .wait(1000)
-            .goto('https://avto.pro/warehouses/23038/.aspx?page=1&step=1000&')
+            .click('a[data-target="#log-in-form-container"]')
+            .wait('#log-in-form-container > div:nth-child(1) > form > div:nth-child(1) > label > input[type="text"]')
+            .type('#log-in-form-container > div:nth-child(1) > form > div:nth-child(1) > label > input[type="text"]', login)
+            .type('#log-in-form-container > div:nth-child(1) > form > div:nth-child(2) > label > input[type="password"]', password)
+            .click('#log-in-form-container > div:nth-child(1) > form > div.error > button')
+            .wait(1000)
+            .goto('https://avto.pro/warehouses/77293/.aspx?step=1000&page=1')
+            .wait(3000)
             .evaluate(()=> {
                 return [...document.querySelectorAll('a.whp-code')]
                     .map( el => [el.href]);
             });
 
         let linksTwo = await nightmare
-            .goto('https://avto.pro/warehouses/23038/.aspx?step=1000&pk=1!4!NA--&rk=1!24!NTgxO0ZPMjI4Uk9EOzAwMDA-&page=2')
+            .goto('https://avto.pro/warehouses/77293/.aspx?step=1000&pk=1!4!NA--&rk=1!20!NzI3OzI0MzAyODswMDAw&page=2')
+            .wait(3000)
             .evaluate(()=> {
                 return [...document.querySelectorAll('a.whp-code')]
                     .map( el => [el.href]);
             });
 
         let linksTree = await nightmare
-            .goto('https://avto.pro/warehouses/23038/.aspx?step=1000&pk=1!4!OQ--&rk=1!20!NDEzOzQ2NjMxMDswMDAw&page=3')
+            .goto('https://avto.pro/warehouses/77293/.aspx?step=1000&pk=1!4!NA--&rk=1!20!NzI3OzI0MzAyODswMDAw&page=3')
+            .wait(3000)
             .evaluate(()=> {
                 return [...document.querySelectorAll('a.whp-code')]
                     .map( el => [el.href]);
@@ -59,13 +63,13 @@ module.exports.parsePrices = async (login, password, links) => {
         await nightmare
             .viewport(1000, 500)
             .goto(`https://avto.pro`)
-            .click('a[data-target="#log-in-form-container"')
-            .wait('input[name="login"]')
-            .type('input[name="login"]', login)
-            .type('input[name="password"]', password)
-            .click('button[type="submit"]')
+            .click('a[data-target="#log-in-form-container"]')
+            .wait('#log-in-form-container > div:nth-child(1) > form > div:nth-child(1) > label > input[type="text"]')
+            .type('#log-in-form-container > div:nth-child(1) > form > div:nth-child(1) > label > input[type="text"]', login)
+            .type('#log-in-form-container > div:nth-child(1) > form > div:nth-child(2) > label > input[type="password"]', password)
+            .click('#log-in-form-container > div:nth-child(1) > form > div.error > button')
             .wait(1000)
-            .goto('https://avto.pro/zapchasti-BW002R-BOSCH/')
+            .goto('https://avto.pro/zapchasti-DC9001KIT-EMMETEC/')
             .wait(500)
             .click('a[href="#js-modal-preferences"]')
             .select('#js-form-preferences > div.clearfix > div:nth-child(2) > select', 'UAH')

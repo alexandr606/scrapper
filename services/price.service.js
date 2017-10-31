@@ -6,6 +6,10 @@ const mysql  = require('mysql');
 module.exports.saveLinks = function (data) {
     let connection = mysql.createConnection(config);
 
+    if(!data || !data.length) {
+        throw new Error('There is no links');
+    }
+
     let query =`INSERT INTO links (link) VALUES ?`;
 
     connection.connect(function(err) {

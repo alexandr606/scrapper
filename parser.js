@@ -8,7 +8,7 @@ let avtopro         = require('./catalogs/avtopro.prices');
 (function () {
     return LinksService.getLinks(function (links) {
         let count = 0;
-        return avtopro.parsePrices(config.avto_pro.login, config.avto_pro.password, links).then( result => {
+        return avtopro.parsePrices(config.avtopro_ru.login, config.avtopro_ru.password, links).then( result => {
             count++;
             console.log(result, '#'+count);
 
@@ -16,5 +16,11 @@ let avtopro         = require('./catalogs/avtopro.prices');
             console.log(err);
         })
     });
-
 })();
+
+// (function () {
+//     return avtopro.avtoproPriceLinks(config.avtopro_ru.login, config.avtopro_ru.password)
+//         .then( function (result) {
+//             console.log(result);
+//         })
+// })();
