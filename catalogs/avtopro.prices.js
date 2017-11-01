@@ -61,7 +61,7 @@ module.exports.parsePrices = async (login, password, links) => {
         let data = [];
 
         await nightmare
-            .viewport(1000, 500)
+            .viewport(1200, 500)
             .goto(`https://avto.pro`)
             .click('a[data-target="#log-in-form-container"]')
             .wait('#log-in-form-container > div:nth-child(1) > form > div:nth-child(1) > label > input[type="text"]')
@@ -71,7 +71,7 @@ module.exports.parsePrices = async (login, password, links) => {
             .wait(1000)
             .goto('https://avto.pro/zapchasti-DC9001KIT-EMMETEC/')
             .wait(500)
-            .click('a[href="#js-modal-preferences"]')
+            .click('#site_content > div > div.grid__col.grid__cell.grid__cell--2.grid__cell--grow > div > div > article > div.part_list_heder_block.flex.justify-space-between.align-center > a')
             .select('#js-form-preferences > div.clearfix > div:nth-child(2) > select', 'UAH')
             .wait(500)
             .click('#js-preferences-globe')
@@ -86,7 +86,7 @@ module.exports.parsePrices = async (login, password, links) => {
             await nightmare.goto(links[i].link)
                 .wait(500);
 
-            let err = await nightmare.evaluate( () => {
+            let err = await nightmare.evaluate(() => {
                 return document.querySelector('#txt-global > div.er_name');
             });
 
@@ -100,13 +100,13 @@ module.exports.parsePrices = async (login, password, links) => {
                         })
                 }
 
-                let originArt = await nightmare.evaluate( () => {
+                let originArt = await nightmare.evaluate(function getOriginArt() {
                     return document.querySelector('#js-global-vars').getAttribute('data-paramcode');
                 });
 
-                let smPrice = await nightmare.evaluate( () => {
-                    return document.querySelector('tr[data-sellerid="46616"]')
-                        .querySelector('td:nth-child(5)').getAttribute('data-value');
+                let smPrice = await nightmare.evaluate(function getSmPrice() {
+                    let grid = document.querySelector('tr[data-sellerid="1145835"]');
+                    return grid.querySelector('td:nth-child(5)').getAttribute('data-value');
                 });
 
                 if(!smPrice) {
