@@ -106,6 +106,11 @@ module.exports.parsePrices = async (login, password, links) => {
 
                 let smPrice = await nightmare.evaluate(function getSmPrice() {
                     let grid = document.querySelector('tr[data-sellerid="1145835"]');
+
+                    if(!grid) {
+                        return 0;
+                    }
+
                     return grid.querySelector('td:nth-child(5)').getAttribute('data-value');
                 });
 
