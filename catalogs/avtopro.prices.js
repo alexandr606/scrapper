@@ -114,17 +114,16 @@ module.exports.parsePrices = async (login, password, links) => {
                     return grid.querySelector('td:nth-child(5)').getAttribute('data-value');
                 });
 
-                if(!smPrice) {
-                    await nightmare.end();
-                    return;
+                if(smPrice) {
+                    data.push(await LinksService.saveParsedData(
+                        formResults(await nightmare.evaluate( () => {
+                            return [...document.querySelectorAll('tr.pl-partinfo')]
+                                .map( el => el.innerText);
+                        }), links[i].link, originArt, smPrice)
+                    ));
                 }
 
-                data.push(await LinksService.saveParsedData(
-                    formResults(await nightmare.evaluate( () => {
-                        return [...document.querySelectorAll('tr.pl-partinfo')]
-                            .map( el => el.innerText);
-                    }), links[i].link, originArt, smPrice)
-                ));
+
             }
         }
 

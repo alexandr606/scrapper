@@ -34,7 +34,7 @@ module.exports.saveLinks = function (data) {
 module.exports.getLinks = function (done) {
     let connection = mysql.createConnection(config);
 
-    let query = `SELECT link FROM links`;
+    let query = `SELECT DISTINCT link FROM links`;
 
     connection.connect(function(err) {
         if (err) {
