@@ -65,9 +65,11 @@ let yandex = async (password, login, shopId) => {
         });
 
         console.log(cost);
-
+s
         let expense = cost.data[cost.data.length-2].split('\t')[2];
         let clicks  = cost.data[0].split('\t')[2];
+
+        cost.balance = cost.balance && cost.balance.replace(' ', '');
 
         console.log('yandex');
         return {
