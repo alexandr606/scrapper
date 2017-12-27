@@ -74,10 +74,10 @@ let yandex = async (password, login, shopId) => {
         console.log('yandex');
         return {
             catalogId       : 'yandex',
-            balance         : parseFloat(cost.balance) || null,
-            clicks          : parseInt(clicks, 10)|| null,
-            rating          : parseFloat(rating) || null,
-            expense         : parseFloat(expense)|| null,
+            balance         : parseFloat(cost.balance) || 0,
+            clicks          : parseInt(clicks, 10)|| 0,
+            rating          : parseFloat(rating) || 0,
+            expense         : parseFloat(expense)|| 0,
             ordersCount     : ordersResult && ordersResult.length,
             ordersCharge    : ordersResult && ordersResult.length
                         && ordersResult.map(el => el.orderCharge)
