@@ -8,55 +8,21 @@ let zzap        = require('./catalogs/zzap');
 let avito       = require('./catalogs/avito');
 let dbService   = require('./services/db.service');
 let config      = require('./config.json');
+let avtoProRu   = require('./catalogs/avto.pro.ru');
 
 let process = async function () {
+    let yandexData      = await yandex(config.yandex);
+    let avtoProData     = await avtoPro(config.avto_pro);
+    let tiuData         = await tiu(config.tiu);
+    let zzapData        = await zzap(config.zzap);
+    // let avitoData       = await avito(config.avito);
+    let avtoProRuData   = await avtoProRu(config.avtopro_ru);
 
-    try {
-        let yandexData = await yandex(
-            config.yandex.password,
-            config.yandex.login,
-            config.yandex.shopId
-        );
-
-        // let avtoProData = await avtoPro(
-        //     config.avto_pro.login,
-        //     config.avto_pro.password,
-        //     'avtopro'
-        // );
-
-        // let avtoProRuData = await avtoPro(
-        //     config.avtopro_ru.login,
-        //     config.avtopro_ru.password,
-        //     'avtopro_ru'
-        // );
-        //
-        // let tiuData = await tiu(
-        //     config.tiu.login,
-        //     config.tiu.password
-        // );
-        //
-        // let zzapData = await zzap(
-        //     config.zzap.login,
-        //     config.zzap.password
-        // );
-        //
-        // let avitoData = await avito(
-        //     config.avito.login,
-        //     config.avito.password
-        // );
-
-
-        return [yandexData];
-    } catch (err) {
-        console.log(err);
-        throw new Error(err);
-    }
-
+    return [yandexData, zzapData, avtoProData, avtoProRuData, tiuData];
 };
 
 
 async function writeData () {
-
     try {
         let data = await process();
 
@@ -73,7 +39,6 @@ async function writeData () {
     } catch (err) {
         console.log(err);
     }
-
 }
 
 writeData ();
