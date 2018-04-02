@@ -4,7 +4,7 @@ const moment = require('moment');
 const Nightmare = require('nightmare');
 const nightmare = new Nightmare({ show: true, waitTimeout: 150000 });
 
-let avtoPro = async (params) => {
+let avtoProRu = async (params) => {
 
     let { password, login, id: catalogID } = params;
 
@@ -213,4 +213,4 @@ const dates = {
 };
 
 
-module.exports = avtoPro;
+module.exports = avtoProRu;

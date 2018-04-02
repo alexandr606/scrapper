@@ -1,8 +1,8 @@
 'use strict';
 
+const moment = require('moment');
 const Nightmare = require('nightmare');
-const nightmare = new Nightmare({show: true });
-const moment    = require('moment');
+const nightmare = new Nightmare({ show: true, waitTimeout: 150000 });
 
 /*
  {
@@ -15,7 +15,9 @@ const moment    = require('moment');
  }
  */
 
-let yandex = async (password, login, shopId) => {
+let yandex = async (params) => {
+    let { password, login } = params;
+
     try {
         await nightmare
             .goto(`https://partner.market.yandex.ru/order.xml?id=21322372`)

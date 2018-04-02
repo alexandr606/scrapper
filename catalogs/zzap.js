@@ -1,8 +1,8 @@
 'use strict';
 
-const Nightmare = require('nightmare');
-const nightmare = new Nightmare({ show: true });
 const moment    = require('moment');
+const Nightmare = require('nightmare');
+const nightmare = new Nightmare({ show: true, waitTimeout: 150000 });
 
 /*
  returning values
@@ -13,10 +13,12 @@ const moment    = require('moment');
  }
 */
 
-let zzap = async (login, password) => {
+let zzap = async (params) => {
+    let { login, password } = params;
 
     try {
         let balance = await nightmare
+            .viewport(1000, 500)
             .goto('https://www.zzap.ru/user/money.aspx')
             .wait('#ctl00_BodyPlace_LogonFormCallbackPanel_LogonFormLayout_AddrEmail1TextBox_I')
             .type('#ctl00_BodyPlace_LogonFormCallbackPanel_LogonFormLayout_AddrEmail1TextBox_I', login)

@@ -1,19 +1,12 @@
 'use strict';
 
+const moment = require('moment');
 const Nightmare = require('nightmare');
-const moment    = require('moment');
-const nightmare = new Nightmare({ show: true });
-const config    = require('../config.json');
+const nightmare = new Nightmare({ show: true, waitTimeout: 150000 });
 
-/*
- returning values
- {
-     ordersCount: Integer,
-     ordersSum: Float
- }
- */
+let tiu = async (params) => {
+    let { login, password } = params;
 
-let tiu = async (login, password) => {
     try {
         let olVersionSelector = 'span.b-label_type_header-version';
         let oldVersionLink    = 'https://my.tiu.ru/cabinet/order?version_type=old_version';

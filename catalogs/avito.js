@@ -6,16 +6,9 @@ const moment = require('moment-timezone');
 
 const TIMEZONE = 'Europe/Kiev';
 
-/*
-returning values
-{
-  balance: Float,
-  expense: Integer,
-  clicks: Integer
-}
-*/
+let avito = async (params) => {
+    let { login, password } = params;
 
-let avito = async (login, password) => {
     try {
         let balance = await nightmare
             .goto('https://www.avito.ru/profile/context/campaigns')
@@ -77,18 +70,18 @@ function __formExpense(data) {
 };
 
 const dates = {
-    'декабря': '11',
-    'ноября': '10',
-    'октября': '09',
-    'сентября': '08',
-    'августа': '07',
-    'июля': '06',
-    'июня': '05',
-    'мая': '04',
-    'апреля': '03',
-    'марта': '02',
-    'февраля': '01',
-    'января': '00',
+    'декабря'   : '11',
+    'ноября'    : '10',
+    'октября'   : '09',
+    'сентября'  : '08',
+    'августа'   : '07',
+    'июля'      : '06',
+    'июня'      : '05',
+    'мая'       : '04',
+    'апреля'    : '03',
+    'марта'     : '02',
+    'февраля'   : '01',
+    'января'    : '00',
 };
 
 module.exports = avito;
