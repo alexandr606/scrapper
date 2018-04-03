@@ -5,6 +5,9 @@ let LinksService = require('../services/price.service');
 const Nightmare = require('nightmare');
 const nightmare = new Nightmare({show: true });
 
+const FIRST_LINK  = 'https://avto.pro/warehouses/77293/.aspx?step=1000&page=1';
+const SECOND_LINK = 'https://avto.pro/warehouses/77293/.aspx?step=1000&pk=1!4!NA--&rk=1!20!NzI3OzI0MzAyODswMDAw&page=2';
+const THIRD_LINK  = 'https://avto.pro/warehouses/77293/.aspx?step=1000&pk=1!4!NA--&rk=1!20!NzI3OzI0MzAyODswMDAw&page=3';
 
 module.exports.avtoproPriceLinks = async (login, password) => {
     try {
@@ -18,7 +21,7 @@ module.exports.avtoproPriceLinks = async (login, password) => {
             .type('#log-in-form-container > div:nth-child(1) > form > div:nth-child(2) > label > input[type="password"]', password)
             .click('#log-in-form-container > div:nth-child(1) > form > div.error > button')
             .wait(1000)
-            .goto('https://avto.pro/warehouses/77293/.aspx?step=1000&page=1')
+            .goto(FIRST_LINK)
             .wait(3000)
             .evaluate(()=> {
                 return [...document.querySelectorAll('a.whp-code')]
@@ -26,7 +29,7 @@ module.exports.avtoproPriceLinks = async (login, password) => {
             });
 
         let linksTwo = await nightmare
-            .goto('https://avto.pro/warehouses/77293/.aspx?step=1000&pk=1!4!NA--&rk=1!20!NzI3OzI0MzAyODswMDAw&page=2')
+            .goto(SECOND_LINK)
             .wait(3000)
             .evaluate(()=> {
                 return [...document.querySelectorAll('a.whp-code')]
@@ -34,7 +37,7 @@ module.exports.avtoproPriceLinks = async (login, password) => {
             });
 
         let linksTree = await nightmare
-            .goto('https://avto.pro/warehouses/77293/.aspx?step=1000&pk=1!4!NA--&rk=1!20!NzI3OzI0MzAyODswMDAw&page=3')
+            .goto(THIRD_LINK)
             .wait(3000)
             .evaluate(()=> {
                 return [...document.querySelectorAll('a.whp-code')]
